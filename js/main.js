@@ -246,3 +246,32 @@ function actualizarNumerito() {
 function mostrarTotalCarrito() {
     totalCarrito.textContent = `Total: $${total}`;
 };
+
+// Función para mostrar una notificación
+function mostrarNotificacion() {
+    const notificacionCartel = document.createElement('div');
+    notificacionCartel.className = 'notificacionCartel';
+    notificacionCartel.innerText = '¡Producto agregado al carrito!';
+
+    const notificacion = document.getElementById('notificacion');
+    if (!notificacion) {
+        console.error('El elemento notificacion no se encontró en el DOM.');
+        return;
+    };
+
+    // Eliminar notificacionCartel si ya existe
+    const notificacionActual = notificacion.querySelector('.notificacionCartel');
+    if (notificacionActual) {
+        notificacion.removeChild(notificacionActual);
+    };
+
+    notificacion.appendChild(notificacionCartel);
+
+    // Ocultar el cartelito después de 3 segundos
+    setTimeout(() => {
+        // Verificar que la notificación aún está en el DOM antes de intentar eliminarla
+        if (notificacion.contains(notificacionCartel)) {
+            notificacion.removeChild(notificacionCartel);
+        }
+    }, 3000);
+};
