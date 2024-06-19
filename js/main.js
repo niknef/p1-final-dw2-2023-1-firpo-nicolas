@@ -91,3 +91,82 @@ function actualizarBotonCarrito() {
 
 // Llamamos a la función para actualizar el botón del carrito
 actualizarBotonCarrito();
+
+// Función que crea la ventana modal para ver más detalles del producto
+function verProducto(e) {
+    const nombreProducto = e.currentTarget.getAttribute('data-id');
+    const producto = productos.find(producto => producto.nombre === nombreProducto);
+
+    // Creación de la modal
+    const modalContainer = document.createElement('div');
+    modalContainer.className = 'modalContainer';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modalContent';
+
+    // Botón para cerrar el modal
+    const botonCerrar = document.createElement('button');
+    botonCerrar.className = 'cerrarModal bi bi-x-lg';
+    botonCerrar.addEventListener('click', () => {
+        document.body.removeChild(modalContainer);
+    });
+
+    // Slider de imágenes
+    const slider = document.createElement('div');
+    slider.className = 'slider';
+
+    producto.img.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = producto.nombre;
+        slider.appendChild(img);
+    });
+
+    // Botones de navegación
+    const prevButton = document.createElement('button');
+    prevButton.className = 'slider-button prev';
+    prevButton.innerHTML = '<i class="bi bi-chevron-left"></i>';
+    prevButton.addEventListener('click', () => changeImage(slider, -1));
+
+    const nextButton = document.createElement('button');
+    nextButton.className = 'slider-button next';
+    nextButton.innerHTML = '<i class="bi bi-chevron-right"></i>';
+    nextButton.addEventListener('click', () => changeImage(slider, 1));
+
+    slider.appendChild(prevButton);
+    slider.appendChild(nextButton);
+
+    // Elementos del producto
+    const nombreProductoElemento = document.createElement('h2');
+    nombreProductoElemento.classList.add('producto-titulo');
+    nombreProductoElemento.innerText = producto.nombre;
+
+    const descripcionProducto = document.createElement('p');
+    descripcionProducto.classList.add('descripcion-producto');
+    descripcionProducto.innerText = producto.descripcion;
+
+    const precioProducto = document.createElement('p');
+    precioProducto.innerText = `$${producto.precio}`;
+    precioProducto.classList.add('producto-precio');
+
+    const botonAgregar = document.createElement('button');
+    botonAgregar.classList.add('producto-agregar');
+    botonAgregar.setAttribute('data-id', producto.nombre);
+    botonAgregar.textContent = 'Agregar';
+    botonAgregar.addEventListener('click', agregarCarrito);
+
+    const bag = document.createElement('i');
+    bag.classList.add('bi', 'bi-bag-plus');
+
+    // Armado de la modal
+    botonAgregar.prepend(bag);
+
+    modalContent.append(botonCerrar, slider, nombreProductoElemento, descripcionProducto, precioProducto, botonAgregar);
+
+    modalContainer.appendChild(modalContent);
+
+    document.body.appendChild(modalContainer);
+
+    // Iniciar slider
+    iniciarSlider(slider);
+};
