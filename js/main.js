@@ -754,3 +754,15 @@ function abrirModalOferta() {
         }
     }, 10000); // Ocultar después de 10 segundos
 };
+
+// Función para seleccionar un producto al azar
+function seleccionarProductoAlAzar() {
+    const indiceAleatorio = Math.floor(Math.random() * productos.length);
+    return productos[indiceAleatorio];
+};
+
+// Función para aplicar descuento
+function aplicarDescuento(producto, porcentajeDescuento) {
+    const precioConDescuento = producto.precio - (producto.precio * (porcentajeDescuento / 100));
+    return precioConDescuento.toFixed(0); // Redondear 
+};
