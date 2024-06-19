@@ -1,0 +1,36 @@
+:root {
+    --clr-main: #159A9C;
+    --clr-main-light: #3CA6A6;
+    --clr-white: #FFFFFF;
+    --clr-gray: #e5e6e7ce;
+    --clr-red: #961818;
+    --clr-black: #002333;
+  
+  }
+  /* reset */
+  
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3, h4, h5, h6, p, a, input, textarea, ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  
+  /* Estilos generales */
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F2F2F2;
+    color: var(--clr-black);
+  }
