@@ -64,3 +64,30 @@ function cargarProductos(productosElegidos) {
 };
 
 cargarProductos(productos);
+
+// Actualizar botones con evento
+
+// Botón agregar al carrito
+function actualizarBotonesAgregar() {
+    const botonesAgregar = document.querySelectorAll('.producto-agregar');
+    botonesAgregar.forEach(boton => {
+        boton.addEventListener('click', agregarCarrito);
+        
+    });
+};
+
+// Botón ver más (modal)
+function actualizarBotonesVer() {
+    const botonesVer = document.querySelectorAll('.producto-ver');
+    botonesVer.forEach(boton => {
+        boton.addEventListener('click', verProducto);
+    });
+};
+
+// Botón Carrito
+function actualizarBotonCarrito() {
+    verCarrito.addEventListener('click', abrirCarrito);
+};
+
+// Llamamos a la función para actualizar el botón del carrito
+actualizarBotonCarrito();
