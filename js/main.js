@@ -453,3 +453,304 @@ function mostrarNotificacion() {
         }
     }, 3000);
 };
+
+// Función confirmar compra
+function confirmarCompra() {
+    // Crear modal
+    const modalConfirmacion = document.createElement('div');
+    modalConfirmacion.className = 'modal-confirmacion-compra';
+
+    // Crear el cuerpo del modal
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body confirmacion-compra';
+
+    const modalTitle = document.createElement('h2');
+    modalTitle.className = 'modal-title';
+    modalTitle.innerHTML = 'Finalizar compra';
+
+    const modalSubtitle = document.createElement('h3');
+    modalSubtitle.className = 'modal-subtitle';
+    modalSubtitle.innerHTML = 'Ingresá tus datos para continuar con la compra';
+
+    // Crear formulario de compra
+    const form = document.createElement('form');
+
+    // Validación al enviar el formulario
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Validación de campos
+        const nombre = document.querySelector("#nombre");
+        const apellido = document.querySelector("#apellido");
+        const telefono = document.querySelector("#telefono");
+        const email = document.querySelector("#email");
+        const fechaEntrega = document.querySelector("#fechaEntrega");
+        const direccionEntrega = document.querySelector("#direccionEntrega");
+        const metodoPago = document.querySelector("#metodoPago");
+
+        let sinErrores = true;
+
+        // Borrar mensajes de error anteriores
+        document.querySelectorAll('.mensaje-error').forEach(el => el.remove());
+
+        [nombre, apellido, telefono, email, fechaEntrega, direccionEntrega, metodoPago].forEach(campo => {
+            if (campo.value.trim() === '') {
+                sinErrores = false;
+                campo.classList.add('is-invalid');
+
+                // Crear y mostrar mensaje de error
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'mensaje-error';
+                errorMessage.textContent = `${campo.placeholder} es obligatorio`;
+                campo.parentElement.appendChild(errorMessage);
+            } else {
+                campo.classList.remove('is-invalid');
+                campo.classList.add('is-valid');
+            }
+        });
+
+        // Si no hay errores, se procede a finalizar la compra
+        if (sinErrores) {
+            // Vaciar el modal y mostrar mensaje de éxito
+            modalBody.innerHTML = '';
+            
+            const mensajeExitoContenedor = document.createElement('div');
+            mensajeExitoContenedor.className = 'mensaje-exito-contenedor';
+
+            const logoMundo = document.createElement('img');
+            logoMundo.src = 'img/logo.png';
+            logoMundo.alt = 'Logo Mundo Urbano';
+
+            const mensajeExito = document.createElement('p');
+            mensajeExito.textContent = 'Compra finalizada exitosamente. ¡Gracias por tu compra!';
+            mensajeExito.className = 'mensaje-exito';
+            // Botón de cerrar modal
+            const botonCerrar = document.createElement('button');
+            botonCerrar.className = 'boton-cerrar-modal';
+            botonCerrar.textContent = 'Volver a la tienda';
+            botonCerrar.addEventListener('click', () => {
+                modalConfirmacion.remove();
+            });
+
+            mensajeExitoContenedor.append(logoMundo, mensajeExito, botonCerrar);
+
+            modalBody.append(mensajeExitoContenedor);
+            
+            // Limpiar carrito
+            productosEnCarrito = [];
+            cantidadTotal = 0;
+            total = 0;
+            actualizarNumerito();
+            mostrarTotalCarrito();
+            abrirCarrito();
+        }
+    });
+
+    // Campos del formulario
+    const crearCampoFormulario = (id, type, label) => {
+        const divContenedorForm = document.createElement('div');
+        divContenedorForm.className = 'contendor-form';
+
+        const input = document.createElement('input');
+        input.setAttribute('type', type);
+        input.className = 'form-control';
+        input.setAttribute('name', id);
+        input.setAttribute('id', id);
+        input.setAttribute('placeholder', label);
+
+        const labelElement = document.createElement('label');
+        labelElement.setAttribute('for', id);
+        labelElement.textContent = label;
+
+        divContenedorForm.append(input, labelElement);
+        return divContenedorForm;
+    };
+
+    // Crear y agregar campos al formulario
+    const nombreCampo = crearCampoFormulario('nombre', 'text', 'Nombre');
+    const apellidoCampo = crearCampoFormulario('apellido', 'text', 'Apellido');
+    const telefonoCampo = crearCampoFormulario('telefono', 'tel', 'Teléfono');
+    const emailCampo = crearCampoFormulario('email', 'email', 'Correo electrónico');
+    const fechaEntregaCampo = crearCampoFormulario('fechaEntrega', 'date', 'Fecha de entrega');
+    const direccionEntregaCampo = crearCampoFormulario('direccionEntrega', 'text', 'Dirección de entrega');
+
+    // Crear contenedor para los campos de nombre y apellido
+    const datosUsuario = document.createElement('div');
+    datosUsuario.className = 'datos-usuario';
+
+    // Añadir los campos de nombre y apellido al contenedor
+    datosUsuario.append(nombreCampo, apellidoCampo);
+
+    // Campo método de pago (diferente porque es un select)
+    const metodoPagoDiv = document.createElement('div');
+    metodoPagoDiv.className = 'metodo-pago-div';
+
+    const metodoPagoSelect = document.createElement('select');
+    metodoPagoSelect.className = 'form-select';
+    metodoPagoSelect.setAttribute('name', 'metodoPago');
+    metodoPagoSelect.setAttribute('id', 'metodoPago');
+
+    const labelMetodoPago = document.createElement('label');
+    labelMetodoPago.setAttribute('for', 'metodoPago');
+    labelMetodoPago.textContent = 'Método de pago';
+
+    // Opciones para el método de pago
+    const opcionesPago = [
+        { valor: 'efectivo', texto: 'Efectivo' },
+        { valor: 'tarjeta', texto: 'Tarjeta de crédito/débito' },
+        { valor: 'mercadoPago', texto: 'Mercado Pago' }
+    ];
+
+    opcionesPago.forEach(opcion => {
+        const opcionElemento = document.createElement('option');
+        opcionElemento.value = opcion.valor;
+        opcionElemento.textContent = opcion.texto;
+        metodoPagoSelect.appendChild(opcionElemento);
+    });
+
+    metodoPagoDiv.append(labelMetodoPago, metodoPagoSelect);
+
+    // Botones del formulario
+    const divBotones = document.createElement('div');
+    divBotones.className = 'div-buttons-confirmacion';
+
+    const botonFinalizar = document.createElement('button');
+    botonFinalizar.setAttribute('type', 'submit');
+    botonFinalizar.className = 'boton-compra-finalizada';
+    botonFinalizar.textContent = 'Finalizar compra';
+
+    const botonCancelar = document.createElement('button');
+    botonCancelar.className = 'boton-cancelar-compra';
+    botonCancelar.textContent = 'Cancelar';
+    botonCancelar.addEventListener('click', () => {
+        modalConfirmacion.remove();
+    });
+
+    divBotones.append(botonFinalizar, botonCancelar);
+
+    // Agregar todos los elementos al formulario
+    form.append(datosUsuario, telefonoCampo, emailCampo, fechaEntregaCampo, direccionEntregaCampo, metodoPagoDiv, divBotones);
+
+    // Agregar todo al cuerpo del modal
+    modalBody.append(modalTitle, modalSubtitle, form);
+    modalConfirmacion.append(modalBody);
+
+    // Agregar el modal al body
+    document.body.appendChild(modalConfirmacion);
+};
+
+// Función para eliminar productos del carrito
+function quitarProducto(producto) {
+    const index = productosEnCarrito.findIndex(prod => prod.nombre === producto.nombre);
+    if (index > -1) {
+        productosEnCarrito.splice(index, 1);
+    };
+
+    cantidadTotal -= producto.cantidad;
+    total = productosEnCarrito.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
+
+    actualizarNumerito();
+    mostrarTotalCarrito();
+    abrirCarrito();  // Refrescar el carrito
+};
+
+// Agregamos un evento a cada botón de categorías
+botonesCategorias.forEach(boton => {
+    boton.addEventListener('click', (e) => {
+        botonesCategorias.forEach(boton => {
+            boton.classList.remove('active');
+        });
+        e.currentTarget.classList.add('active');
+
+        if (e.currentTarget.id !== 'todos') {
+            const productosBoton = productos.filter(producto => producto.categoria === e.currentTarget.id);
+            tituloPrincipal.innerText = e.currentTarget.textContent;
+            cargarProductos(productosBoton);
+        } else {
+            tituloPrincipal.textContent = 'Todos los productos';
+            cargarProductos(productos);
+        };
+
+        abrirModalOferta();
+    });
+});
+
+// Función para abrir modal oferta
+function abrirModalOferta() {
+    const productoOferta = seleccionarProductoAlAzar();
+    const precioConDescuento = aplicarDescuento(productoOferta, 15);
+
+    const modalOferta = document.createElement('div');
+    modalOferta.className = 'modal-oferta';
+
+    const modalOfertaContent = document.createElement('div');
+    modalOfertaContent.className = 'modal-oferta-content'; 
+
+    const modalOfertaHeader = document.createElement('div');
+    modalOfertaHeader.className = 'modal-oferta-header';
+
+    const tituloModal = document.createElement('h2');
+    tituloModal.innerText = '¡Oferta del día!';
+
+    const botonCerrar = document.createElement('button');
+    botonCerrar.className = 'cerrarModal bi bi-x-lg'; 
+    botonCerrar.addEventListener('click', () => {
+        document.body.removeChild(modalOferta);
+    });
+
+    // Elementos del producto
+
+    const ofertaContenido = document.createElement('div');
+    ofertaContenido.className = 'oferta-contenido';
+
+    const imagenProducto = document.createElement('img');
+    imagenProducto.src = productoOferta.img[0];
+    imagenProducto.alt = productoOferta.nombre;
+
+    const ofertaContenidoTexto = document.createElement('div');
+    ofertaContenidoTexto.className = 'oferta-contenido-texto';    
+
+    const nombreProductoElemento = document.createElement('h2');
+    nombreProductoElemento.classList.add('producto-titulo');
+    nombreProductoElemento.innerText = productoOferta.nombre;
+
+    const descripcionProducto = document.createElement('p');    
+    descripcionProducto.classList.add('descripcion-producto');  
+    descripcionProducto.innerText = productoOferta.descripcion;
+
+    const precioProducto = document.createElement('p');
+    precioProducto.innerText = `$${productoOferta.precio}`;
+    precioProducto.classList.add('producto-precio-tachar');
+
+    const precioConDescuentoElemento = document.createElement('p');
+    precioConDescuentoElemento.classList.add('producto-precio-descuento');
+    precioConDescuentoElemento.innerText = `$${precioConDescuento}`;
+
+    const botonAgregar = document.createElement('button');
+    botonAgregar.classList.add('producto-agregar');
+    botonAgregar.setAttribute('data-id', productoOferta.nombre);
+    botonAgregar.textContent = 'Agregar';
+    botonAgregar.addEventListener('click', agregarCarritoOferta);
+
+    const bag = document.createElement('i');
+    bag.classList.add('bi', 'bi-bag-plus');
+
+    // Armamos la modal
+    botonAgregar.prepend(bag);
+    
+    ofertaContenidoTexto.append(nombreProductoElemento, descripcionProducto, precioProducto, precioConDescuentoElemento, botonAgregar)
+    
+    ofertaContenido.append(imagenProducto, ofertaContenidoTexto );
+    modalOfertaHeader.append(tituloModal, botonCerrar);
+
+    modalOfertaContent.append(modalOfertaHeader,  ofertaContenido);
+
+    modalOferta.append(modalOfertaContent);
+
+    document.body.appendChild(modalOferta);
+    
+    setTimeout(() => {
+        if (document.body.contains(modalOferta)) {
+            document.body.removeChild(modalOferta);
+        }
+    }, 10000); // Ocultar después de 10 segundos
+};
