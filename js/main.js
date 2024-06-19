@@ -170,3 +170,21 @@ function verProducto(e) {
     // Iniciar slider
     iniciarSlider(slider);
 };
+
+// Creamos Slider para las imágenes
+
+function changeImage(slider, direction) {
+    const images = slider.querySelectorAll('img');
+    let index = Array.from(images).findIndex(img => img.style.display === 'block');
+
+    images[index].style.display = 'none';
+    index = (index + direction + images.length) % images.length;
+    images[index].style.display = 'block';
+};
+
+function iniciarSlider(slider) {
+    const images = slider.querySelectorAll('img');
+    images.forEach((img, i) => {
+        img.style.display = i === 0 ? 'block' : 'none';
+    });
+};
