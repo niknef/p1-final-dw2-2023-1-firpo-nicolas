@@ -188,3 +188,27 @@ function iniciarSlider(slider) {
         img.style.display = i === 0 ? 'block' : 'none';
     });
 };
+
+// Función para agregar productos al carrito
+
+function agregarCarrito(e) {
+    const nombreProducto = e.currentTarget.getAttribute('data-id');
+    const productoAgregado = productos.find(producto => producto.nombre === nombreProducto);
+
+    let productoExistente = productosEnCarrito.find(producto => producto.nombre === nombreProducto);
+
+    // Verificamos si el producto ya está en el carrito
+    if (productoExistente) {
+        productoExistente.cantidad += 1;
+    } else {
+        productoAgregado.cantidad = 1;
+        productosEnCarrito.push({ ...productoAgregado });
+    };
+
+    cantidadTotal += 1;
+    total = productosEnCarrito.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
+
+    actualizarNumerito();
+    mostrarTotalCarrito();
+    mostrarNotificacion();
+};
