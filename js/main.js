@@ -212,3 +212,37 @@ function agregarCarrito(e) {
     mostrarTotalCarrito();
     mostrarNotificacion();
 };
+
+function agregarCarritoOferta(e) {
+    const nombreProductoOferta = e.currentTarget.getAttribute('data-id');
+    const productoAgregadoOferta = productos.find(producto => producto.nombre === nombreProductoOferta);
+    const precioConDescuento = aplicarDescuento(productoAgregadoOferta, 15);
+
+    let productoExistenteOferta = productosEnCarrito.find(producto => producto.nombre === nombreProductoOferta);
+
+    // Verificamos si el producto ya está en el carrito
+    if (productoExistenteOferta) {
+        productoExistenteOferta.cantidad += 1;
+    } else {
+        productoAgregadoOferta.cantidad = 1;
+        productosEnCarrito.push({ ...productoAgregadoOferta, precio: precioConDescuento });
+    };
+
+    cantidadTotal += 1;
+    total = productosEnCarrito.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
+
+    actualizarNumerito();
+    mostrarTotalCarrito();
+    mostrarNotificacion();
+};
+
+// Actualizamos la cantidad de productos en el carrito
+function actualizarNumerito() {
+    let nuevoNumerito = productosEnCarrito.reduce((acc, producto) => acc + producto.cantidad, 0);
+    numerito.innerText = nuevoNumerito;
+};
+
+// Función para mostrar el precio total del carrito
+function mostrarTotalCarrito() {
+    totalCarrito.textContent = `Total: $${total}`;
+};
