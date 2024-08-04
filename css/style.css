@@ -332,6 +332,25 @@ button:hover{
   
 }
 
+
+.favorito{
+  background-color: var(--clr-white);
+  color: var(--clr-red);
+  border: 1px solid var(--clr-red);
+  width: 45px;
+  padding: 0;
+}
+
+.favorito:hover{
+  background-color: var(--clr-red);
+  color: var(--clr-white);
+}
+
+.favorito-activo{
+  background-color: var(--clr-red);
+  color: var(--clr-white);
+}
+
 .carrito-producto-cantidad {
   display: flex;
   flex-direction: column;
@@ -386,6 +405,22 @@ button:hover{
 
 }
 
+.botones-favorito-agregar{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 300px;
+  padding: 0;
+}
+
+.botones-favorito-agregar .favorito{
+  margin: 0;
+  padding: 0;
+}
+
+.botones-favorito-agregar .producto-agregar{
+  margin: 0;
+}
 /* Estilos del modal de confirmación de compra */
 .modal-confirmacion-compra {
   display: flex;

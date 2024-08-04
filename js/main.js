@@ -10,9 +10,28 @@ const contenidoShop = document.getElementById('contenidoShop');
 const modalCarrito = document.getElementById('modalCarrito');
 const totalCarrito = document.getElementById('totalCarrito');
 const botonesCategorias = document.querySelectorAll('.boton-categoria');
+const botonFavoritos = document.getElementById('favoritos');
 const tituloPrincipal = document.getElementById('tituloPrincipal');
 const numerito = document.querySelector("#numerito");
 const verCarrito = document.getElementById('carrito');
+
+
+// Función favoritos
+function agregarAFavoritos(producto, botonFavorito) {
+    let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+    if (!favoritos.some(fav => fav.nombre === producto.nombre)) {
+        favoritos.push(producto); // la función some recorre el array y devuelve true si encuentra un elemento que cumpla la condición
+        botonFavorito.classList.add('favorito-activo');
+        localStorage.setItem('favoritos', JSON.stringify(favoritos));
+        console.log('Producto agregado a favoritos');
+    } else {
+        favoritos = favoritos.filter(fav => fav.nombre !== producto.nombre);
+        botonFavorito.classList.remove('favorito-activo');
+        localStorage.setItem('favoritos', JSON.stringify(favoritos));
+        console.log('Producto eliminado de favoritos');
+    }
+    console.log(favoritos);
+};
 
 // Función para cargar productos
 function cargarProductos(productosElegidos) {
@@ -52,7 +71,11 @@ function cargarProductos(productosElegidos) {
         botonVer.setAttribute('data-id', producto.nombre);
         botonVer.textContent = 'Ver';
 
-        botones.append(botonAgregar, botonVer);
+        const botonFavorito = document.createElement('button');
+        botonFavorito.classList.add('bi', 'bi-heart-fill', 'favorito');
+        botonFavorito.addEventListener('click', () => agregarAFavoritos(producto, botonFavorito));
+
+        botones.append(botonAgregar, botonVer, botonFavorito);
 
         card.append(imagen, h2, p, botones);
 
@@ -149,19 +172,28 @@ function verProducto(e) {
     precioProducto.innerText = `$${producto.precio}`;
     precioProducto.classList.add('producto-precio');
 
+    const botonesProductos = document.createElement('div');
+    botonesProductos.className = 'botones-favorito-agregar'; 
+
     const botonAgregar = document.createElement('button');
     botonAgregar.classList.add('producto-agregar');
     botonAgregar.setAttribute('data-id', producto.nombre);
     botonAgregar.textContent = 'Agregar';
     botonAgregar.addEventListener('click', agregarCarrito);
-
+    
     const bag = document.createElement('i');
     bag.classList.add('bi', 'bi-bag-plus');
 
     // Armado de la modal
     botonAgregar.prepend(bag);
 
-    modalContent.append(botonCerrar, slider, nombreProductoElemento, descripcionProducto, precioProducto, botonAgregar);
+    const botonFavorito = document.createElement('button');
+    botonFavorito.classList.add('bi', 'bi-heart-fill', 'favorito');
+    botonFavorito.addEventListener('click', () => agregarAFavoritos(producto, botonFavorito));
+
+    botonesProductos.append(botonAgregar, botonFavorito);
+
+    modalContent.append(botonCerrar, slider, nombreProductoElemento, descripcionProducto, precioProducto, botonesProductos);
 
     modalContainer.appendChild(modalContent);
 
@@ -714,11 +746,25 @@ function actualizarTotal() {
     document.getElementById('total').innerText = `$${total}`;
 }
 
+// Agregamos un evento al botón de favoritos
+botonFavoritos.addEventListener('click', (e) => {
+    botonesCategorias.forEach(boton => {
+        boton.classList.remove('active');
+    });
+    e.currentTarget.classList.add('active');
+
+    const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+    tituloPrincipal.innerText = 'Tus Favoritos';
+    cargarProductos(favoritos);
+
+});
+
 // Agregamos un evento a cada botón de categorías
 botonesCategorias.forEach(boton => {
     boton.addEventListener('click', (e) => {
         botonesCategorias.forEach(boton => {
             boton.classList.remove('active');
+            botonFavoritos.classList.remove('active');
         });
         e.currentTarget.classList.add('active');
 
@@ -734,7 +780,6 @@ botonesCategorias.forEach(boton => {
         abrirModalOferta();
     });
 });
-
 
 // Función para abrir modal oferta
 function abrirModalOferta() {
