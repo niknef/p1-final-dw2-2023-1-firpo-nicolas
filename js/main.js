@@ -326,10 +326,29 @@ function abrirCarrito() {
             const cantidadSmall = document.createElement('small');
             cantidadSmall.innerText = 'Cantidad:';
 
+            const contenedorCantidades = document.createElement('div');
+            contenedorCantidades.className = 'contenedor-cantidades';
+
+            // Botón para disminuir la cantidad
+            const botonDisminuir = document.createElement('button');
+            botonDisminuir.className = 'bi bi-dash-circle cant-button';
+            botonDisminuir.addEventListener('click', () => {
+                disminuirProducto(producto, cantidadProducto, subtotalProducto);
+            });
+
             const cantidadProducto = document.createElement('p');
             cantidadProducto.innerText = producto.cantidad;
 
-            contenedorProductoCantidad.append(cantidadSmall, cantidadProducto);
+            // Botón para aumentar la cantidad
+            const botonAumentar = document.createElement('button');
+            botonAumentar.className = 'bi bi-plus-circle cant-button';
+            botonAumentar.addEventListener('click', () => {
+                aumentarProducto(producto, cantidadProducto, subtotalProducto);
+            });
+
+            contenedorCantidades.append(botonDisminuir, cantidadProducto, botonAumentar);
+            // Agregar elementos al contenedor de cantidad
+            contenedorProductoCantidad.append(cantidadSmall, contenedorCantidades);
 
             // Div con el precio
             const contenedorProductoPrecio = document.createElement('div');
@@ -659,7 +678,7 @@ function quitarProducto(producto) {
     const index = productosEnCarrito.findIndex(prod => prod.nombre === producto.nombre);
     if (index > -1) {
         productosEnCarrito.splice(index, 1);
-    };
+    }
 
     cantidadTotal -= producto.cantidad;
     total = productosEnCarrito.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
@@ -668,6 +687,32 @@ function quitarProducto(producto) {
     mostrarTotalCarrito();
     abrirCarrito();  // Refrescar el carrito
 };
+
+// Función para aumentar la cantidad de un producto
+function aumentarProducto(producto, cantidadProducto, subtotalProducto) {
+    producto.cantidad++;
+    cantidadProducto.innerText = producto.cantidad;
+    subtotalProducto.innerText = `$${producto.precio * producto.cantidad}`;
+    actualizarTotal();
+};
+
+// Función para disminuir la cantidad de un producto
+function disminuirProducto(producto, cantidadProducto, subtotalProducto) {
+    if (producto.cantidad > 1) {
+        producto.cantidad--;
+        cantidadProducto.innerText = producto.cantidad;
+        subtotalProducto.innerText = `$${producto.precio * producto.cantidad}`;
+        actualizarTotal();
+    }else if (producto.cantidad <= 1) {
+        quitarProducto(producto);
+    }
+};
+
+// Función para actualizar el total del carrito
+function actualizarTotal() {
+    total = productosEnCarrito.reduce((sum, producto) => sum + producto.precio * producto.cantidad, 0);
+    document.getElementById('total').innerText = `$${total}`;
+}
 
 // Agregamos un evento a cada botón de categorías
 botonesCategorias.forEach(boton => {
@@ -689,6 +734,7 @@ botonesCategorias.forEach(boton => {
         abrirModalOferta();
     });
 });
+
 
 // Función para abrir modal oferta
 function abrirModalOferta() {

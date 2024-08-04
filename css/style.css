@@ -332,6 +332,20 @@ button:hover{
   
 }
 
+.carrito-producto-cantidad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contenedor-cantidades{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+}
+
+
 .carrito-acciones-vaciar:hover{
   color: #d6d4d4;
 }
