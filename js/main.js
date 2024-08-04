@@ -172,7 +172,6 @@ function verProducto(e) {
 };
 
 // Creamos Slider para las imágenes
-
 function changeImage(slider, direction) {
     const images = slider.querySelectorAll('img');
     let index = Array.from(images).findIndex(img => img.style.display === 'block');
@@ -190,7 +189,6 @@ function iniciarSlider(slider) {
 };
 
 // Función para agregar productos al carrito
-
 function agregarCarrito(e) {
     const nombreProducto = e.currentTarget.getAttribute('data-id');
     const productoAgregado = productos.find(producto => producto.nombre === nombreProducto);
@@ -267,6 +265,12 @@ function abrirCarrito() {
     botonCerrar.className = 'cerrarModal bi bi-x-lg';
     botonCerrar.addEventListener('click', () => {
         modalCarrito.style.display = 'none';
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { 
+            modalCarrito.style.display = 'none';
+        }
     });
 
     // Agregamos el título y el botón de cerrar al header
@@ -531,6 +535,12 @@ function confirmarCompra() {
                 modalConfirmacion.remove();
             });
 
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') { // Comprobamos si la tecla presionada es 'Esc'
+                    modalConfirmacion.remove();
+                }
+            });
+
             mensajeExitoContenedor.append(logoMundo, mensajeExito, botonCerrar);
 
             modalBody.append(mensajeExitoContenedor);
@@ -625,6 +635,12 @@ function confirmarCompra() {
         modalConfirmacion.remove();
     });
 
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { 
+            modalConfirmacion.remove();
+        }
+    });
+
     divBotones.append(botonFinalizar, botonCancelar);
 
     // Agregar todos los elementos al formulario
@@ -697,6 +713,7 @@ function abrirModalOferta() {
         document.body.removeChild(modalOferta);
     });
 
+
     // Elementos del producto
 
     const ofertaContenido = document.createElement('div');
@@ -764,5 +781,5 @@ function seleccionarProductoAlAzar() {
 // Función para aplicar descuento
 function aplicarDescuento(producto, porcentajeDescuento) {
     const precioConDescuento = producto.precio - (producto.precio * (porcentajeDescuento / 100));
-    return precioConDescuento.toFixed(0); // Redondear 
+    return precioConDescuento.toFixed(0); // Redondeo
 };
