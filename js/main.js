@@ -14,6 +14,7 @@ const botonFavoritos = document.getElementById('favoritos');
 const tituloPrincipal = document.getElementById('tituloPrincipal');
 const numerito = document.querySelector("#numerito");
 const verCarrito = document.getElementById('carrito');
+const bannerPublicidad = document.getElementById('bannerPublicidad');
 
 
 // Función favoritos
@@ -132,7 +133,21 @@ function verProducto(e) {
     botonCerrar.className = 'cerrarModal bi bi-x-lg';
     botonCerrar.addEventListener('click', () => {
         document.body.removeChild(modalContainer);
+        document.removeEventListener('keydown', manejarTeclado);
     });
+
+    document.addEventListener('keydown', manejarTeclado);
+
+    function manejarTeclado(event) {
+        if (event.key === 'Escape') {
+            modalContainer.style.display = 'none';
+            document.removeEventListener('keydown', manejarTeclado);
+        } else if (event.key === 'ArrowLeft') {
+            changeImage(slider, -1);
+        } else if (event.key === 'ArrowRight') {
+            changeImage(slider, 1);
+        }
+    };
 
     // Slider de imágenes
     const slider = document.createElement('div');
@@ -150,6 +165,7 @@ function verProducto(e) {
     prevButton.className = 'slider-button prev';
     prevButton.innerHTML = '<i class="bi bi-chevron-left"></i>';
     prevButton.addEventListener('click', () => changeImage(slider, -1));
+    
 
     const nextButton = document.createElement('button');
     nextButton.className = 'slider-button next';
@@ -755,6 +771,7 @@ botonFavoritos.addEventListener('click', (e) => {
 
     const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
     tituloPrincipal.innerText = 'Tus Favoritos';
+    
     cargarProductos(favoritos);
 
 });
@@ -778,6 +795,7 @@ botonesCategorias.forEach(boton => {
         };
 
         abrirModalOferta();
+        crearBanner();
     });
 });
 
@@ -802,6 +820,12 @@ function abrirModalOferta() {
     botonCerrar.className = 'cerrarModal bi bi-x-lg'; 
     botonCerrar.addEventListener('click', () => {
         document.body.removeChild(modalOferta);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { 
+            modalOferta.style.display = 'none';
+        }
     });
 
 
@@ -874,3 +898,30 @@ function aplicarDescuento(producto, porcentajeDescuento) {
     const precioConDescuento = producto.precio - (producto.precio * (porcentajeDescuento / 100));
     return precioConDescuento.toFixed(0); // Redondeo
 };
+
+
+// Función para crear el banner
+function crearBanner() {
+    const banner = banners[Math.floor(Math.random() * banners.length)];
+
+    // Limpiamos el contenido actual del bannerPublicidad
+    bannerPublicidad.innerHTML = '';
+
+    const imagenBanner = document.createElement('img');
+    imagenBanner.className = 'banner-publicidad';
+    imagenBanner.src = banner.imagen;
+    imagenBanner.alt = banner.texto;
+    imagenBanner.style.cursor = 'pointer';
+
+    // Agrega un evento click a la imagen del banner para redirigir a la categoría correspondiente
+    imagenBanner.addEventListener('click', () => {
+        const categoria = document.getElementById(banner.categoria);
+        if (categoria) {
+            categoria.click();
+        }
+    });
+
+    bannerPublicidad.appendChild(imagenBanner);
+}
+
+crearBanner();

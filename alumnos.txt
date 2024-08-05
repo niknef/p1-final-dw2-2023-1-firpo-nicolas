@@ -1,0 +1,6 @@
+Alumno : Firpo Nicolas Ezequiel
+Cuatrimestre : 1 - Primer Cuatrimestre
+Comisión : DWM2B
+Turno : Mañana 
+Materia: Programación 1
+Profesor: Corbalan Cristian

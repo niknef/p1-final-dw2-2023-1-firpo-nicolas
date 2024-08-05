@@ -161,6 +161,11 @@ nav ul {
   gap: 20px;
 }
 
+.banner-publicidad{
+  margin-top: 2rem;
+  width: 100vw;
+  box-shadow: 3px 3px 15px 1px #222 ;
+}
 /* Estilos de los productos */
 .producto {
   background-color: var(--clr-white);
