@@ -25,15 +25,74 @@ function agregarAFavoritos(producto, botonFavorito) {
         botonFavorito.classList.add('favorito-activo');
         localStorage.setItem('favoritos', JSON.stringify(favoritos));
         console.log('Producto agregado a favoritos');
+        notificacionAgragadoFavorito();
+        
     } else {
         favoritos = favoritos.filter(fav => fav.nombre !== producto.nombre);
         botonFavorito.classList.remove('favorito-activo');
         localStorage.setItem('favoritos', JSON.stringify(favoritos));
         console.log('Producto eliminado de favoritos');
+        notificacionQuitarFavorito();
     }
     console.log(favoritos);
 };
 
+// Función para mostrar una notificación
+function notificacionQuitarFavorito() {
+    const notificacionCartel = document.createElement('div');
+    notificacionCartel.className = 'notificacionCartel';
+    notificacionCartel.innerText = '¡Producto quitado de favoritos!';
+
+    const notificacion = document.getElementById('notificacion');
+    if (!notificacion) {
+        console.error('El elemento notificacion no se encontró en el DOM.');
+        return;
+    };
+
+    // Eliminar notificacionCartel si ya existe
+    const notificacionActual = notificacion.querySelector('.notificacionCartel');
+    if (notificacionActual) {
+        notificacion.removeChild(notificacionActual);
+    };
+
+    notificacion.appendChild(notificacionCartel);
+
+    // Ocultar el cartelito después de 3 segundos
+    setTimeout(() => {
+        // Verificar que la notificación aún está en el DOM antes de intentar eliminarla
+        if (notificacion.contains(notificacionCartel)) {
+            notificacion.removeChild(notificacionCartel);
+        }
+    }, 3000);
+};
+
+function notificacionAgragadoFavorito() {
+    const notificacionCartel = document.createElement('div');
+    notificacionCartel.className = 'notificacionCartel';
+    notificacionCartel.innerText = '¡Producto agregado a favoritos!';
+
+    const notificacion = document.getElementById('notificacion');
+    if (!notificacion) {
+        console.error('El elemento notificacion no se encontró en el DOM.');
+        return;
+    };
+
+    // Eliminar notificacionCartel si ya existe
+    const notificacionActual = notificacion.querySelector('.notificacionCartel');
+    if (notificacionActual) {
+        notificacion.removeChild(notificacionActual);
+    };
+
+    notificacion.appendChild(notificacionCartel);
+
+    // Ocultar el cartelito después de 3 segundos
+    setTimeout(() => {
+        // Verificar que la notificación aún está en el DOM antes de intentar eliminarla
+        if (notificacion.contains(notificacionCartel)) {
+            notificacion.removeChild(notificacionCartel);
+        }
+    }, 3000);
+};
 // Función para cargar productos
 function cargarProductos(productosElegidos) {
     contenidoShop.innerHTML = '';
