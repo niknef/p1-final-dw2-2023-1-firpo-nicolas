@@ -33,6 +33,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: #F2F2F2;
   color: var(--clr-black);
+  overflow-x: hidden;
 }
 
 /* Estilos de la cabecera */
@@ -469,7 +470,8 @@ button:hover{
 .confirmacion-compra .modal-subtitle {
   margin-bottom: 2rem;
   font-size: 1.2rem;
-  color: var(--clr-gray);
+  color: var(--clr-black);
+  opacity: 0.8;
   text-align: center; 
 }
 
